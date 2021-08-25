@@ -72,7 +72,7 @@ polygonSeries.heatRules.push({
   "property": "fill",
   "target": polygonSeries.mapPolygons.template,
   "min": am4core.color("#ffffff"),
-  "max": am4core.color("#AAAA00"),
+  "max": am4core.color("#646eff"),
   "logarithmic": true   //LOG로 할지 LINEAR로 할지
 });
   
