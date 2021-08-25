@@ -65,6 +65,57 @@ class Am4chartMap extends Component {
     circle.tooltipText = "{tooltip}";
     circle.propertyFields.radius = "size";
     this.map = map;
+
+
+    // Add heat rule
+polygonSeries.heatRules.push({
+  "property": "fill",
+  "target": polygonSeries.mapPolygons.template,
+  "min": am4core.color("#ffffff"),
+  "max": am4core.color("#AAAA00"),
+  "logarithmic": true   //LOG로 할지 LINEAR로 할지
+});
+  
+    // Add heat legend
+var heatLegend = map.createChild(am4maps.HeatLegend);
+heatLegend.series = polygonSeries;
+heatLegend.width = am4core.percent(100);
+
+polygonSeries.mapPolygons.template.events.on("over", function(ev) {
+  if (!isNaN(ev.target.dataItem.value)) {
+    heatLegend.valueAxis.showTooltipAt(ev.target.dataItem.value)
+  }
+  else {
+    heatLegend.valueAxis.hideTooltip();
+  }
+});
+
+polygonSeries.mapPolygons.template.events.on("out", function(ev) {
+  heatLegend.valueAxis.hideTooltip();
+});
+
+// Add expectancy data
+polygonSeries.data = [
+  { id : "KR-11", value: 60.524 },
+  { id : "KR-46", value: 77.185 }
+];
+    
+
+    let lineSeries = map.series.push(new am4maps.MapLineSeries());
+
+    lineSeries.mapLines.template.line.stroke = am4core.color("#90AFFF");
+    lineSeries.mapLines.template.line.strokeOpacity = 0.5;
+    lineSeries.mapLines.template.line.strokeWidth = 4;
+    lineSeries.mapLines.template.line.strokeDasharray = "3,3";
+    
+    lineSeries.data = [{
+      "multiGeoLine": [
+        [
+          { "latitude": 37.530689, "longitude": 127.003066 },
+          { "latitude": 35.01905, "longitude": 127.433 }
+       ]
+     ]
+    }];
   }
 
   componentWillUnmount() {
@@ -77,11 +128,11 @@ class Am4chartMap extends Component {
     return (
       <div className={s.mapChart}>
         <div className={s.stats}>
-          <h6 className="mt-1">GEO-LOCATIONS</h6>
+          <h6 className="mt-1">발전량</h6>
           <p className="h3 m-0">
             <span className="mr-xs fw-normal">
               <AnimateNumber
-                value={1656843}
+                value={165684}
                 initialValue={0}
                 duration={1000}
                 stepPrecision={0}
